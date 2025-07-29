@@ -4,7 +4,6 @@ import com.example.minishop.model.User;
 import com.example.minishop.repository.UserRepository;
 import com.example.minishop.service.UserService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,8 +26,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByEmail(String emailAddress) {
-        return null;
+    public User findUserByEmail(String email) {
+        if (email != null) {
+            return userRepository.findByEmailAddress(email);
+        } else {
+            return null;
+        }
     }
 
     @Override

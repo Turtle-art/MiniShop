@@ -1,11 +1,13 @@
 package com.example.minishop.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "orderItems")
+@Data
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

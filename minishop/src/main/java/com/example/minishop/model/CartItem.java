@@ -1,9 +1,11 @@
 package com.example.minishop.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "cartItems")
+@Data
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
