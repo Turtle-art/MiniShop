@@ -13,12 +13,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    private String username;
+    private String name;
     private String email;
-
     private String role;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
+    public User(String email, String name, String role) {
+        this(0, email, name, role);
+    }
+
+    public User(long userId, String emailAddress, String name, String role) {
+        this.userId = userId;
+        this.email = emailAddress;
+        this.name = name;
+        this.role = role;
+    }
 }
