@@ -1,5 +1,6 @@
 package com.example.minishop.model;
 
+import com.example.minishop.model.enums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
