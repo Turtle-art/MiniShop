@@ -1,33 +1,35 @@
 package com.dariel.minishop.model;
 
+import com.dariel.minishop.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Data
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    private String name;
+    private String username;
     private String email;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
-    public User(String email, String name, String role) {
-        this(0, email, name, role);
-    }
-
-    public User(long userId, String emailAddress, String name, String role) {
-        this.userId = userId;
-        this.email = emailAddress;
-        this.name = name;
-        this.role = role;
+    public User(String email, String username, String role) {
+        this.email = email;
+        this.username = username;
+        this.role = UserRole.valueOf(role);
+        this.orders = new ArrayList<>();
     }
 }

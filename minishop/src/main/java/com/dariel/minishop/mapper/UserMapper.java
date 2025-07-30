@@ -12,8 +12,8 @@ public class UserMapper extends ModelMapper<User, UserDto> {
         return UserDto.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
-                .userName(user.getName())
-                .role(user.getRole())
+                .userName(user.getUsername())
+                .role(String.valueOf(user.getRole()))
                 .build();
     }
     @Override
@@ -21,10 +21,10 @@ public class UserMapper extends ModelMapper<User, UserDto> {
         return new User(userDto.getEmail(), userDto.getUserName(), userDto.getRole());
     }
 
-    @Override
-    public void mapTo(User source, User destination) {
-        destination.setEmail(source.getEmail());
-        destination.setName(source.getName());
-        destination.setRole(source.getRole());
-    }
+//    @Override
+//    public void mapTo(User source, User destination) {
+//        destination.setEmail(source.getEmail());
+//        destination.setUsername(source.getUsername());
+//        destination.setRole(source.getRole());
+//    }
 }
