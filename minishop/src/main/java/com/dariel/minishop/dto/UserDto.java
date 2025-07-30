@@ -10,11 +10,4 @@ public class UserDto {
     private String email;
     private String userName;
     private String role;
-
-    public UserDto(long userId, String email, String userName, String role){
-        this.userId = userId;
-        this.email = email;
-        this.userName = userName;
-        this.role = role;
-    }
 }

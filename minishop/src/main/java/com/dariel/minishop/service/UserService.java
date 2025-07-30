@@ -7,7 +7,7 @@ public interface UserService {
 
     User findUserById(long userId);
 
-    User findUserByEmail(String emailAddress);
+    User findUserByEmail(String email);
 
     User createNewUser(User user);
 
