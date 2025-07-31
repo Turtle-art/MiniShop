@@ -6,4 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
+    // add item to cart
+
+    // delete item from cart
+
+    // clear cart
 }
