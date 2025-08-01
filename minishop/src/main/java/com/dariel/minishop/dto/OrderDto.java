@@ -16,4 +16,5 @@ public class OrderDto {
     private List<OrderItem> items;
     private String paymentId;
     private String shippingAddress;
+    private String orderTrackingId;
 }

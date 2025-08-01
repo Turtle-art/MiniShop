@@ -20,11 +20,4 @@ public class UserMapper extends ModelMapper<User, UserDto> {
     public User mapTo(UserDto userDto) {
         return new User(userDto.getEmail(), userDto.getUserName(), userDto.getRole());
     }
-
-//    @Override
-//    public void mapTo(User source, User destination) {
-//        destination.setEmail(source.getEmail());
-//        destination.setUsername(source.getUsername());
-//        destination.setRole(source.getRole());
-//    }
 }

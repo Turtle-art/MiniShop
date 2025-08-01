@@ -30,6 +30,7 @@ public class Order {
     private OrderStatus status;
 
     private String paymentId;
+    private String orderTrackingId;
 
     private String shippingAddress;
 }
