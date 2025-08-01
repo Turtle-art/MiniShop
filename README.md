@@ -38,8 +38,6 @@ MiniShop is a full-stack-ready backend built with **Java**, **Spring Boot**, **H
 - Returns secure Stripe-hosted payment link
 - Supports webhook to confirm payment and finalize order
 
-  Here is a complete `README.md` section formatted properly, focusing on what a webhook is, both simply and formally, and how it’s used in your project:
-
 ---
 
 # Understanding Webhooks in This Project
