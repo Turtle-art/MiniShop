@@ -61,7 +61,6 @@ In Stripe’s case, webhooks allow Stripe to notify your backend server when imp
 
 * A payment is successfully completed
 * A payment fails
-* A subscription is cancelled
 
 Webhooks are an essential tool in event-driven applications where real-time updates are needed without constant polling.
 
