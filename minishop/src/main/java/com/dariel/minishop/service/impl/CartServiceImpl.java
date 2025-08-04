@@ -18,7 +18,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Product addItemToCart(Product item) {
+    public Product addProductToCart(Product item) {
         var existingCartItem = findProductById(item.getProductId());
         if (existingCartItem != null) {
             return existingCartItem;

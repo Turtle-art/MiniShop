@@ -23,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
-        var userRole = userService.getUserRole(product.getLastModifiedByUserId());
+        var userRole = userService.getUserRole(product.getUserId());
         var existingProduct = findProductByName(product.getName());
         if (existingProduct != null) {
             return existingProduct;

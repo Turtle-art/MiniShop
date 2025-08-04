@@ -10,7 +10,7 @@ public class ProductMapper extends ModelMapper<Product, ProductDto> {
     public ProductDto mapFrom(Product product) {
         return ProductDto.builder()
                 .productId(product.getProductId())
-                .userId(product.getLastModifiedByUserId())
+                .userId(product.getUserId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
