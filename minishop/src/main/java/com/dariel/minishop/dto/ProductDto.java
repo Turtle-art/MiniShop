@@ -9,8 +9,10 @@ import java.math.BigDecimal;
 @Builder
 public class ProductDto {
     private Long productId;
-    private Long UserId;
+    private Long userId;
     private String name;
     private String description;
     private BigDecimal price;
+    private String imageUrl;
+    private String category;
 }
