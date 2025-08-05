@@ -5,6 +5,6 @@ import com.dariel.minishop.model.Product;
 public interface ProductService {
     Iterable<Product> getAllProducts();
     Product createProduct(Product product);
-    void deleteProductById(long productId);
+    void deleteProduct(Product product);
     Product findProductByName(String productName);
 }

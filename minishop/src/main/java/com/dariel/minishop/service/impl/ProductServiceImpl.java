@@ -28,18 +28,22 @@ public class ProductServiceImpl implements ProductService {
         if (existingProduct != null) {
             return existingProduct;
         }
-        else if (userRole.equals("ADMIN")){
-            return productRepository.save(product);
+        else if (!userRole.equals("ADMIN")){
+            throw new EntityNotFoundException("Insufficient permission");
         }
-        return null;
+        return productRepository.save(product);
     }
 
     @Override
-    public void deleteProductById(long productId) {
-        if (!productRepository.existsById(productId)){
-            throw new EntityNotFoundException("Cannot find Product with Id" + productId);
+    public void deleteProduct(Product product) {
+        var userRole = userService.getUserRole(product.getUserId());
+        if (!productRepository.existsById(product.getProductId())){
+            throw new EntityNotFoundException("Cannot find Product with Id" + product.getProductId());
         }
-        productRepository.deleteById(productId);
+        else if (!userRole.equals("ADMIN")){
+            throw new EntityNotFoundException("Insufficient permission");
+        }
+        productRepository.deleteById(product.getProductId());
     }
 
     @Override

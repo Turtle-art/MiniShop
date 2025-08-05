@@ -43,9 +43,10 @@ public class ProductController {
     }
 
     @Operation(summary = "Delete Product by id", operationId = "DeleteProductById")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/delete")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void deleteProductById(@PathVariable long id) {
-        productService.deleteProductById(id);
+    public void deleteProductById(@RequestBody ProductDto productDto) {
+        Product productToDelete = productMapper.mapTo(productDto);
+        productService.deleteProduct(productToDelete);
     }
 }

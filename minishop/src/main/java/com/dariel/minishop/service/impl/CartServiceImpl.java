@@ -1,6 +1,6 @@
 package com.dariel.minishop.service.impl;
 
-import com.dariel.minishop.model.Product;
+import com.dariel.minishop.model.CartItem;
 import com.dariel.minishop.repository.CartRepository;
 import com.dariel.minishop.service.CartService;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,33 +18,40 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Product addProductToCart(Product item) {
-        var existingCartItem = findProductById(item.getProductId());
+    public CartItem addItemToCart(CartItem item) {
+        CartItem existingCartItem = findItemInCart(item);
         if (existingCartItem != null) {
-            return existingCartItem;
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + 1);
+            return cartRepository.save(existingCartItem);
+        } else {
+            item.setQuantity(1);
+            return cartRepository.save(item);
         }
-        return cartRepository.save(user);
     }
 
-    private Product findProductById(Long productId) {
-        return null;
+    private CartItem findItemInCart(CartItem item) {
+        return cartRepository.findByUserAndProduct(
+                item.getUser().getUserId(),
+                item.getProduct().getProductId()
+        ).orElse(null);
     }
 
     @Override
-    public List<Product> getCartItems(long userId) {
+    public List<CartItem> getCartItems(long userId) {
         return cartRepository.findByUser(userId);
     }
 
     @Override
-    public void deleteCartItem(Product item) {
-        if (!cartRepository.existsById(item.getProductId())) {
-            throw new EntityNotFoundException("Cannot find Product with Id " + item.getProductId());
+    public void deleteCartItem(CartItem cartItem) {
+        if (!cartRepository.existsById(cartItem.getCartItemId())) {
+            throw new EntityNotFoundException("Cannot find CartItem with Id " + cartItem.getCartItemId());
         }
-        cartRepository.deleteById(item.getProductId());
+        cartRepository.deleteById(cartItem.getCartItemId());
     }
 
     @Override
     public void clearCart(long userId) {
-
+        List<CartItem> cartItems = cartRepository.findByUser(userId);
+        cartRepository.deleteAll(cartItems);
     }
 }
