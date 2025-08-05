@@ -21,10 +21,9 @@ public class CartServiceImpl implements CartService {
     public CartItem addItemToCart(CartItem item) {
         CartItem existingCartItem = findItemInCart(item);
         if (existingCartItem != null) {
-            existingCartItem.setQuantity(existingCartItem.getQuantity() + 1);
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + item.getQuantity());
             return cartRepository.save(existingCartItem);
         } else {
-            item.setQuantity(1);
             return cartRepository.save(item);
         }
     }

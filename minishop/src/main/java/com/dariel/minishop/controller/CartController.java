@@ -29,10 +29,10 @@ public class CartController {
         return cartMapper.mapFrom(cartItemToAdd);
     }
 
-    @Operation(summary = "Get CartItems for user", operationId = "GetCartItems")
+    @Operation(summary = "Get Cart Items for user", operationId = "GetCartItems")
     @GetMapping("/{id}")
-    public List<CartItemDto> getCartItems(@PathVariable long userId) {
-        var cartItems = cartService.getCartItems(userId);
+    public List<CartItemDto> getCartItems(@PathVariable long id) {
+        var cartItems = cartService.getCartItems(id);
         List<CartItemDto> cartItemDtos = new ArrayList<>();
         for (CartItem item: cartItems){
             cartItemDtos.add(cartMapper.mapFrom(item));
@@ -49,7 +49,7 @@ public class CartController {
 
     @Operation(summary = "Clear user cart", operationId = "ClearUserCart")
     @DeleteMapping("/{id}")
-    public void clearUserCart(@RequestBody long id) {
+    public void clearUserCart(@PathVariable long id) {
         cartService.clearCart(id);
     }
 }
