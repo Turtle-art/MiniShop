@@ -3,9 +3,9 @@
 MiniShop is a full-stack-ready backend built with **Java**, **Spring Boot**, **Hibernate**, and **Spring Data JPA** that supports core e-commerce features including:
 
 - Product management (admin)
--  Cart creation and editing
--  Checkout integration with **Stripe**
--  Role-based user functionality
+- Cart creation and editing
+- Checkout integration with **Stripe**
+- Role-based user functionality
 
 ---
 
@@ -24,72 +24,88 @@ MiniShop is a full-stack-ready backend built with **Java**, **Spring Boot**, **H
 ## Features
 
 ### Product Management (Admin)
-- Create, update, delete products
-- Only accessible by users with `ADMIN` role
+- Create, update, and delete products  
+- Only accessible by users with the `ADMIN` role
 
 ### Cart
-- Add products to cart
-- Remove items or update quantity
+- Add products to cart  
+- Remove items or update quantities  
 - Store cart per user (session-based or user-based)
 
 ### Stripe Checkout
-- Initiate checkout with Stripe Checkout Session API
-- Automatically calculates total from cart
-- Returns secure Stripe-hosted payment link
-- Supports webhook to confirm payment and finalize order
+- Initiate checkout using Stripe’s Checkout Session API  
+- Automatically calculates the total from the cart  
+- Returns a secure, Stripe-hosted payment link  
+- Supports webhooks to confirm payment and finalize orders
 
-### Swagger API documentation
+### Swagger API Documentation
+- Fully documented endpoints for testing and integration
 
 ---
 
-# Understanding Webhooks in This Project
+## How Ordering Works
 
-## What is a Webhook? (Simple Explanation)
+### 1. Adding Products to the Cart  
+A customer selects products and specifies quantities. These items are stored in their personal cart, linked to their user account.
 
-A webhook is like asking Stripe:
-"When something happens, please knock on my door and tell me about it."
+---
 
-Imagine you order a pizza. Instead of calling the delivery person every few minutes to ask where they are, you just wait at home. When the pizza arrives, the delivery person rings your doorbell to let you know it's here.
+### 2. Checkout Process  
+When a customer proceeds to checkout:
+- The system retrieves all cart items for that customer.  
+- An order is created in the database with a **pending status** and a unique tracking ID.  
+- The order’s total is calculated based on the products and quantities in the cart.  
+- A Stripe Checkout Session is created, containing the order details and payment amount.  
+- The customer is redirected to Stripe’s secure payment page.  
 
-A webhook works the same way. Instead of your application repeatedly asking Stripe if a payment is done, Stripe will send a message (an HTTP request) to your application as soon as the payment is complete. That message contains information about what happened (e.g. “the payment was successful”).
+---
 
-## Official Definition
+### 3. Payment  
+The customer completes payment on Stripe’s hosted page. This step ensures that sensitive card information never touches your backend.
 
-A **webhook** is an HTTP callback: a way for one system to notify another when an event occurs. Webhooks are typically triggered by some action and send a payload (data) to a specified URL using an HTTP POST request.
+---
 
-In Stripe’s case, webhooks allow Stripe to notify your backend server when important events occur, such as:
+### 4. Payment Confirmation  
+Once payment is completed, Stripe sends a notification (via a webhook) to the backend. The backend:
+- Verifies the authenticity of the notification.  
+- Matches it to the corresponding order using metadata from the payment session.  
+- Updates the order status to **PAID** in the database.  
 
-* A payment is successfully completed
-* A payment fails
+This process works even if the customer closes their browser before returning to the site.
 
-Webhooks are an essential tool in event-driven applications where real-time updates are needed without constant polling.
+---
 
-## How Webhooks Are Used in This Project
+### 5. Order Tracking  
+Every order has a unique tracking ID generated at creation. This ID can be used to monitor the order’s status or track delivery progress.
 
-This Spring Boot eCommerce backend integrates Stripe for payment processing. Here's how webhooks fit into the flow:
+---
 
-1. A customer adds products to their cart and proceeds to checkout.
-2. The backend creates a **Stripe Checkout Session**.
-3. The customer is redirected to Stripe’s secure hosted payment page.
-4. After the payment is completed, Stripe sends a **webhook POST request** to your server at the endpoint:
+## Why This Flow Works Well
+- **Backend-driven**: The payment confirmation happens entirely on the server side, ensuring accuracy.  
+- **Secure**: Payment details are handled by Stripe, and all webhook events are verified before processing.  
+- **Reliable**: Orders are finalized even if the user disconnects or fails to return after payment.  
 
-```
-POST /api/stripe/webhook
-```
+---
 
-5. This request includes an event, such as `checkout.session.completed`, in JSON format.
-6. The backend processes the event by:
+## Understanding Webhooks
 
-   * Verifying the Stripe signature to confirm it’s a valid request.
-   * Reading the metadata (such as order ID) to update the order in the database.
-   * Marking the order as `PAID` or performing any other necessary logic.
+### What is a Webhook? (Simple Explanation)  
+A webhook is like asking Stripe:  
+*"When something happens, please knock on my door and tell me about it."*  
 
-This webhook ensures the backend finalizes and saves the order only after the payment is successfully processed, even if the user closes their browser or loses internet connection before returning to the site.
+It’s similar to ordering a pizza — instead of calling the delivery driver every five minutes to ask where they are, you wait at home. When the pizza arrives, they ring your doorbell. In the same way, Stripe notifies your application automatically when a payment is complete.
 
-## Why Use Webhooks Instead of Redirects
+---
 
-Using webhooks instead of relying on frontend redirects has multiple benefits:
+### Official Definition  
+A **webhook** is an HTTP callback — a way for one system to notify another when an event occurs. The sending system triggers the webhook and sends data (the “payload”) to a specified URL via an HTTP POST request.
 
-* It’s more reliable: payment confirmation doesn’t depend on the customer returning to your site.
-* It’s secure: Stripe signs each webhook so your server can verify its authenticity.
-* It allows backend-driven order processing that doesn’t rely on user behavior after checkout.
+---
+
+### How Webhooks Are Used Here  
+In MiniShop, Stripe webhooks are essential for confirming payments:  
+1. After a customer checks out and pays, Stripe triggers a webhook event.  
+2. This event contains details about the payment, including which order it belongs to.  
+3. The backend verifies the event’s authenticity and updates the order status in the database.  
+
+By using webhooks instead of relying only on browser redirects, the payment process is more reliable, secure, and independent of customer behavior after checkout.
