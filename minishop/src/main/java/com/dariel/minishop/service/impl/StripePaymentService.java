@@ -1,7 +1,6 @@
 package com.dariel.minishop.service.impl;
 
 import com.dariel.minishop.model.Order;
-import com.dariel.minishop.model.OrderItem;
 import com.dariel.minishop.service.PaymentService;
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
@@ -10,8 +9,9 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StripePaymentService implements PaymentService {
@@ -30,28 +30,25 @@ public class StripePaymentService implements PaymentService {
         Stripe.apiKey = secretKey;
     }
 
+    @Override
     public String createCheckoutSession(Order order) {
         try {
-            List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
-
-            for (OrderItem item : order.getItems()) {
-                SessionCreateParams.LineItem lineItem = SessionCreateParams.LineItem.builder()
-                        .setQuantity((long) item.getQuantity())
-                        .setPriceData(
-                                SessionCreateParams.LineItem.PriceData.builder()
-                                        .setCurrency(item.getCurrency())
-                                        .setUnitAmount(item.getPrice()) // in cents
-                                        .setProductData(
-                                                SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                        .setName(item.getProduct().getName())
-                                                        .build()
-                                        )
-                                        .build()
-                        )
-                        .build();
-
-                lineItems.add(lineItem);
-            }
+            List<SessionCreateParams.LineItem> lineItems = order.getItems().stream().map(item ->
+                    SessionCreateParams.LineItem.builder()
+                            .setQuantity((long) item.getQuantity())
+                            .setPriceData(
+                                    SessionCreateParams.LineItem.PriceData.builder()
+                                            .setCurrency(item.getCurrency())
+                                            .setUnitAmount(item.getPrice().multiply(BigDecimal.valueOf(100)).longValue())
+                                            .setProductData(
+                                                    SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                            .setName(item.getProduct().getName())
+                                                            .build()
+                                            )
+                                            .build()
+                            )
+                            .build()
+            ).collect(Collectors.toList());
 
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
@@ -59,14 +56,14 @@ public class StripePaymentService implements PaymentService {
                     .setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}")
                     .setCancelUrl(cancelUrl)
                     .addAllLineItem(lineItems)
+                    .putMetadata("orderId", String.valueOf(order.getOrderId()))
                     .build();
 
             Session session = Session.create(params);
             return session.getUrl();
 
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            throw new RuntimeException("Unexpected error while creating Stripe Checkout session.", e);
+            throw new RuntimeException("Error creating Stripe Checkout session", e);
         }
     }
 }

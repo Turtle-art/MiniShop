@@ -20,7 +20,7 @@ public class OrderItem {
     private Product product;
 
     private int quantity;
-    private long price;
+    private BigDecimal price;
     private String currency;
 }
 
