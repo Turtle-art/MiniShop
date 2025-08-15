@@ -39,7 +39,7 @@ public class CheckoutService {
             item.setProduct(cartItem.getProduct());
             item.setQuantity(cartItem.getQuantity());
             item.setPrice(cartItem.getProduct().getPrice());
-            item.setCurrency("usd");
+            item.setCurrency("zar");
             return item;
         }).toList();
 
