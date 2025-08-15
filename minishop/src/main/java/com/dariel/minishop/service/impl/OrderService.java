@@ -3,6 +3,7 @@ package com.dariel.minishop.service.impl;
 import com.dariel.minishop.model.Order;
 import com.dariel.minishop.model.OrderItem;
 import com.dariel.minishop.model.User;
+import com.dariel.minishop.model.enums.OrderStatus;
 import com.dariel.minishop.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +26,13 @@ public class OrderService {
         order.setItems(items);
         order.setOrderDate(LocalDateTime.now());
         order.setOrderTrackingId(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
-        //order.setStatus("PENDING");
+        order.setStatus(OrderStatus.valueOf("PENDING"));
         return orderRepository.save(order);
     }
 
     public void markOrderAsPaid(Long orderId) {
         orderRepository.findById(orderId).ifPresent(order -> {
-            //order.setStatus("PAID");
+            order.setStatus(OrderStatus.valueOf("PAID"));
             orderRepository.save(order);
         });
     }

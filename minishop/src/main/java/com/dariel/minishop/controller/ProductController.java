@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("v1/api/product")
 public class ProductController {
     private final ProductService productService;
     private final ProductMapper productMapper;

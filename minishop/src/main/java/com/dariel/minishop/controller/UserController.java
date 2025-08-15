@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("v1/api/user")
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
