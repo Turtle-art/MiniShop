@@ -30,7 +30,7 @@ MiniShop is a full-stack-ready backend built with **Java**, **Spring Boot**, **H
 ### Cart
 - Add products to cart  
 - Remove items or update quantities  
-- Store cart per user (session-based or user-based)
+- Store cart per user (persisted)
 
 ### Stripe Checkout
 - Initiate checkout using Stripe’s Checkout Session API  
