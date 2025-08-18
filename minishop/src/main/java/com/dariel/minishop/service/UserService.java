@@ -1,12 +1,13 @@
 package com.dariel.minishop.service;
 
 import com.dariel.minishop.model.User;
-import com.dariel.minishop.model.enums.UserRole;
+
+import java.util.Optional;
 
 public interface UserService {
     User findUserById(long userId);
 
-    User findUserByEmail(String email);
+    Optional<User> findUserByEmail(String email);
 
     User createNewUser(User user);
 
