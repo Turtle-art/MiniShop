@@ -5,6 +5,7 @@ import com.dariel.minishop.mapper.ProductMapper;
 import com.dariel.minishop.model.Product;
 import com.dariel.minishop.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,14 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("v1/api/product")
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
     private final ProductMapper productMapper;
-
-    public ProductController(ProductService productService, ProductMapper productMapper) {
-        this.productService = productService;
-        this.productMapper = productMapper;
-    }
 
     @Operation(summary = "Get all Products")
     @GetMapping

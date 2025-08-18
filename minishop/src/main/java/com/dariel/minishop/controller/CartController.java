@@ -5,6 +5,7 @@ import com.dariel.minishop.mapper.CartMapper;
 import com.dariel.minishop.model.CartItem;
 import com.dariel.minishop.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,14 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("v1/api/cart")
+@RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
     private final CartMapper cartMapper;
-
-    public CartController(CartService cartService, CartMapper cartMapper){
-        this.cartService = cartService;
-        this.cartMapper = cartMapper;
-    }
 
     @Operation(summary = "Add Item to cart", operationId = "AddItemToCart")
     @PostMapping("/add")
