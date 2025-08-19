@@ -5,6 +5,8 @@ import com.dariel.minishop.mapper.UserMapper;
 import com.dariel.minishop.model.User;
 import com.dariel.minishop.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,9 +22,11 @@ public class UserController {
 
     @Operation(summary = "Create New User", operationId = "CreateNewUser")
     @PostMapping("/create")
-    public UserDto createNewUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createNewUser(@RequestBody UserDto userDto) {
         User newUser = userMapper.mapTo(userDto);
         newUser = userService.createNewUser(newUser);
-        return userMapper.mapFrom(newUser);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(userMapper.mapFrom(newUser));
     }
 }
